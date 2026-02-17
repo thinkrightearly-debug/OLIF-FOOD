@@ -316,31 +316,81 @@ const App: React.FC = () => {
 
       {/* Hero Section */}
       {currentRole === UserRole.Customer && currentView === 'home' && (
-        <section className="relative h-[450px] md:h-[550px] overflow-hidden">
-          <div className="absolute inset-0 bg-black/50 z-10"></div>
-          <img 
-            src="https://images.unsplash.com/photo-1628143242636-9769919b4862?q=80&w=1964&auto=format&fit=crop" 
-            alt="Hero" 
-            className="absolute inset-0 w-full h-full object-cover scale-105"
-          />
-          <div className="relative z-20 h-full max-w-7xl mx-auto px-6 flex flex-col justify-center items-start text-white">
-            <div className="bg-[#D4AF37] text-slate-900 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6">
-              New: Exclusive Lagos Collection
+        <section className="relative h-[550px] md:h-[650px] overflow-hidden mesh-gradient">
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent z-10"></div>
+          
+          {/* Background Image with Parallax-like effect */}
+          <div className="absolute inset-0 opacity-40 mix-blend-overlay">
+            <img 
+              src="https://images.unsplash.com/photo-1628143242636-9769919b4862?q=80&w=1964&auto=format&fit=crop" 
+              alt="Hero BG" 
+              className="w-full h-full object-cover scale-110"
+            />
+          </div>
+
+          <div className="relative z-20 h-full max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 items-center gap-12">
+            <div className="flex flex-col items-start text-white">
+              <div className="bg-[#D4AF37] text-slate-900 px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] mb-8 animate-bounce">
+                Premium Nigerian Dining
+              </div>
+              <h1 className="text-6xl md:text-8xl font-serif font-bold mb-8 leading-tight drop-shadow-2xl">
+                Taste the <br/>
+                <span className="text-[#D4AF37]">Excellence</span>
+              </h1>
+              <p className="text-xl md:text-2xl opacity-90 mb-10 max-w-lg leading-relaxed font-light">
+                Discover the finest Jollof, Suya, and local delicacies from Nigeria's top-rated kitchens, delivered with world-class precision.
+              </p>
+              <div className="flex flex-wrap gap-6">
+                <button 
+                  onClick={() => setCurrentView('restaurants')} 
+                  className="bg-[#D4AF37] text-slate-900 px-10 py-5 rounded-2xl font-black text-xl hover:scale-105 transition-all flex items-center gap-4 pulse-gold shadow-2xl"
+                >
+                  Order Now <i className="fa-solid fa-arrow-right"></i>
+                </button>
+                <button 
+                  onClick={() => setCurrentView('catering')} 
+                  className="bg-white/5 backdrop-blur-xl text-white border border-white/20 px-10 py-5 rounded-2xl font-bold text-xl hover:bg-white/10 transition-all"
+                >
+                  Book Catering
+                </button>
+              </div>
+
+              {/* Stats/Badges */}
+              <div className="mt-12 flex gap-8 items-center border-t border-white/10 pt-8 w-full">
+                <div className="flex flex-col">
+                  <span className="text-3xl font-bold text-[#D4AF37]">25k+</span>
+                  <span className="text-xs uppercase tracking-widest opacity-60">Happy Clients</span>
+                </div>
+                <div className="w-px h-10 bg-white/10"></div>
+                <div className="flex flex-col">
+                  <span className="text-3xl font-bold text-[#D4AF37]">150+</span>
+                  <span className="text-xs uppercase tracking-widest opacity-60">Top Kitchens</span>
+                </div>
+                <div className="w-px h-10 bg-white/10"></div>
+                <div className="flex flex-col">
+                  <span className="text-3xl font-bold text-[#D4AF37]">4.9</span>
+                  <span className="text-xs uppercase tracking-widest opacity-60">Avg. Rating</span>
+                </div>
+              </div>
             </div>
-            <h1 className="text-5xl md:text-7xl font-serif font-bold mb-6 max-w-2xl leading-tight">
-              Premium Local Dining, <br/>
-              <span className="text-[#D4AF37]">Redefined</span>.
-            </h1>
-            <p className="text-xl opacity-90 mb-8 max-w-lg leading-relaxed">
-              From the heart of Lagos to the streets of Abuja, experience authentic Nigerian excellence delivered with world-class care.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <button onClick={() => setCurrentView('restaurants')} className="bg-white text-slate-900 px-8 py-4 rounded-2xl font-bold text-lg hover:scale-105 transition-transform flex items-center gap-3">
-                Explore Dishes <i className="fa-solid fa-utensils"></i>
-              </button>
-              <button onClick={() => setCurrentView('catering')} className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/20 transition-all">
-                Event Catering
-              </button>
+
+            {/* Floating Visual Element (Visible on Large Screens) */}
+            <div className="hidden lg:flex justify-center items-center relative">
+               <div className="absolute w-[500px] h-[500px] bg-[#D4AF37]/10 rounded-full blur-[100px] animate-pulse"></div>
+               <img 
+                 src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=2069&auto=format&fit=crop" 
+                 alt="Featured Dish" 
+                 className="relative z-10 w-[450px] h-[450px] object-cover rounded-[4rem] shadow-2xl border-8 border-white/5 animate-float transform rotate-3"
+               />
+               <div className="absolute -bottom-8 -left-8 bg-white p-6 rounded-3xl shadow-2xl z-20 flex items-center gap-4 animate-bounce delay-700">
+                  <div className="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center">
+                    <i className="fa-solid fa-bolt"></i>
+                  </div>
+                  <div>
+                    <p className="text-slate-900 font-black text-sm">Lightning Delivery</p>
+                    <p className="text-slate-500 text-[10px]">Average 28 mins</p>
+                  </div>
+               </div>
             </div>
           </div>
         </section>

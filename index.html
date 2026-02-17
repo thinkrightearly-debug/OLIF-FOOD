@@ -13,6 +13,32 @@
         .font-serif { font-family: 'Playfair Display', serif; }
         .gold-gradient { background: linear-gradient(135deg, #D4AF37 0%, #F1D279 100%); }
         .emerald-gradient { background: linear-gradient(135deg, #064E3B 0%, #065F46 100%); }
+        .mesh-gradient {
+            background-color: #064E3B;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(161,86%,16%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(45,86%,52%,0.2) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(161,86%,16%,1) 0, transparent 50%);
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(212, 175, 55, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        }
+        .pulse-gold {
+            animation: pulse-gold 2s infinite;
+        }
+
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #064E3B; border-radius: 10px; }
