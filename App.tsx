@@ -65,13 +65,28 @@ const App: React.FC = () => {
   });
 
   const handleVoiceOrder = (itemName: string, qty: number) => {
+    // Search across all restaurants for the closest item match
+    let found = false;
     for (const res of MOCK_RESTAURANTS) {
-      const item = res.menu.find(m => m.name.toLowerCase().includes(itemName.toLowerCase()));
+      const item = res.menu.find(m => 
+        m.name.toLowerCase().includes(itemName.toLowerCase()) || 
+        itemName.toLowerCase().includes(m.name.toLowerCase())
+      );
       if (item) {
-        for(let i=0; i<qty; i++) addToCart(item, res.id);
+        for(let i=0; i<qty; i++) {
+          setCart(prev => {
+            const existing = prev.find(existingItem => existingItem.id === item.id);
+            if (existing) {
+              return prev.map(existingItem => existingItem.id === item.id ? { ...existingItem, quantity: existingItem.quantity + 1 } : existingItem);
+            }
+            return [...prev, { ...item, quantity: 1, restaurantId: res.id }];
+          });
+        }
+        found = true;
         break;
       }
     }
+    if (found) setIsCartOpen(true);
   };
 
   const openRestaurant = (id: string) => {
@@ -116,7 +131,7 @@ const App: React.FC = () => {
           <div className="emerald-gradient p-12 rounded-[3rem] text-white relative overflow-hidden shadow-2xl shadow-emerald-900/40">
             <div className="relative z-10 max-w-2xl">
               <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">World-Class Event Catering</h2>
-              <p className="text-emerald-50 text-lg opacity-80 mb-8">From corporate galas to intimate luxury weddings, OLIF brings the finest flavors to your special occasion.</p>
+              <p className="text-emerald-50 text-lg opacity-80 mb-8">From corporate galas to intimate luxury weddings, TRE brings the finest flavors to your special occasion.</p>
               <button className="bg-[#D4AF37] text-emerald-900 px-10 py-4 rounded-2xl font-bold text-lg hover:scale-105 transition-transform">Inquire Now</button>
             </div>
             <img src="https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=2070&auto=format&fit=crop" className="absolute top-0 right-0 h-full w-1/3 object-cover opacity-20 md:opacity-40" />
@@ -135,7 +150,7 @@ const App: React.FC = () => {
                 <i className="fa-solid fa-gift"></i>
               </div>
               <h3 className="text-2xl font-bold mb-4">First Order Bonus</h3>
-              <p className="text-slate-600 mb-8">Get ₦2,000 off your first order of ₦10,000 or more. Use code: OLIFWELCOME</p>
+              <p className="text-slate-600 mb-8">Get ₦2,000 off your first order of ₦10,000 or more. Use code: TREWELCOME</p>
               <button onClick={() => setCurrentView('restaurants')} className="text-[#064E3B] font-bold flex items-center gap-2 group">
                 Claim Offer <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
               </button>
@@ -145,7 +160,7 @@ const App: React.FC = () => {
                 <i className="fa-solid fa-users"></i>
               </div>
               <h3 className="text-2xl font-bold mb-4">Refer & Earn</h3>
-              <p className="text-slate-600 mb-8">Invite a friend to OLIF and earn ₦1,500 in your wallet when they complete their first order.</p>
+              <p className="text-slate-600 mb-8">Invite a friend to TRE and earn ₦1,500 in your wallet when they complete their first order.</p>
               <button className="text-[#064E3B] font-bold flex items-center gap-2 group">
                 Share Link <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
               </button>
@@ -408,12 +423,12 @@ const App: React.FC = () => {
         onCheckout={handleCheckout}
       />
 
-      <AIAssistant onOrderCommand={handleVoiceOrder} cart={cart} />
+      <AIAssistant onOrderCommand={handleVoiceOrder} onCheckout={handleCheckout} cart={cart} />
 
       <footer className="bg-[#064E3B] text-white py-16 px-6 mt-auto">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
           <div>
-            <div className="text-3xl font-serif font-bold mb-6">OLIF<span className="text-[#D4AF37]">.</span>FOOD</div>
+            <div className="text-3xl font-serif font-bold mb-6">TRE<span className="text-[#D4AF37]">.</span>FOOD</div>
             <p className="text-emerald-100/60 leading-relaxed">
               Authentic African gourmet experience. Excellence in every bite, from our partners to your plate in Nigeria and beyond.
             </p>
@@ -447,7 +462,7 @@ const App: React.FC = () => {
           </div>
         </div>
         <div className="max-w-7xl mx-auto border-t border-white/5 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] opacity-40 uppercase tracking-widest">
-          <div>© 2024 OLIF Food Nigeria. All rights reserved.</div>
+          <div>© 2024 TRE FOOD Nigeria. All rights reserved. Premium Standard.</div>
           <div className="flex gap-6">
             <a href="#"><i className="fa-brands fa-instagram text-lg"></i></a>
             <a href="#"><i className="fa-brands fa-x-twitter text-lg"></i></a>

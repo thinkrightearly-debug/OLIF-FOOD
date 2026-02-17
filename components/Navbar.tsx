@@ -19,7 +19,7 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onCartClick, onRoleSwitch, c
           onClick={() => onViewChange('home')}
           className="text-2xl font-serif font-bold text-[#064E3B] tracking-tight cursor-pointer"
         >
-          OLIF<span className="text-[#D4AF37]">.</span>FOOD
+          TRE<span className="text-[#D4AF37]">.</span>FOOD
         </div>
         
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">

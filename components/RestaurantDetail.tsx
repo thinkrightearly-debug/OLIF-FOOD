@@ -102,7 +102,7 @@ const RestaurantDetail: React.FC<RestaurantDetailProps> = ({ restaurant, onAddTo
           
           <div className="bg-[#D4AF37]/10 rounded-[2rem] p-8 border border-[#D4AF37]/20">
             <h3 className="text-lg font-bold mb-4 text-slate-900">Premium Loyalty</h3>
-            <p className="text-slate-700 text-xs mb-6">Earn OLIF Points with this order. Use points for exclusive rewards and discounts at our partner restaurants.</p>
+            <p className="text-slate-700 text-xs mb-6">Earn TRE Points with this order. Use points for exclusive rewards and discounts at our partner restaurants.</p>
             <button className="w-full bg-[#D4AF37] text-slate-900 py-3 rounded-xl font-bold text-sm">Join Platinum Club</button>
           </div>
         </div>

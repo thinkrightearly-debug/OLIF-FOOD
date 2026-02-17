@@ -31,7 +31,7 @@ export const chatWithAssistant = async (message: string, context: any) => {
     model: 'gemini-3-flash-preview',
     contents: message,
     config: {
-      systemInstruction: "You are OLIF, the premium food assistant for OLIF Food. Be elegant, helpful, and concise. Help users find restaurants, track orders, or resolve issues. Current cart: " + JSON.stringify(context.cart),
+      systemInstruction: "You are TRE, the premium food assistant for TRE FOOD. Be elegant, helpful, and concise. Help users find restaurants, track orders, or resolve issues. Current cart: " + JSON.stringify(context.cart),
     }
   });
   return response.text;
@@ -40,16 +40,37 @@ export const chatWithAssistant = async (message: string, context: any) => {
 export const processVoiceOrder = async (transcript: string) => {
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
-    contents: `The user said: "${transcript}". Identify if they want to order something. Extract 'item' and 'quantity'. Return as JSON.`,
+    contents: `The user said: "${transcript}". 
+    1. Identify if they want to add items to their basket. They might specify multiple items and quantities.
+    2. Identify if they want to "checkout", "place order", "confirm order", or "pay".
+    Return a JSON object according to the schema.`,
     config: {
       responseMimeType: "application/json",
       responseSchema: {
         type: Type.OBJECT,
         properties: {
-          item: { type: Type.STRING },
-          quantity: { type: Type.NUMBER },
-          isOrder: { type: Type.BOOLEAN }
-        }
+          orders: {
+            type: Type.ARRAY,
+            description: "A list of food items and their quantities identified in the speech.",
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                item: { type: Type.STRING, description: "Simplified name of the food item (e.g., 'Jollof Rice')" },
+                quantity: { type: Type.NUMBER, description: "Number of items to add. Default to 1 if not specified." }
+              },
+              required: ["item", "quantity"]
+            }
+          },
+          isCheckoutIntent: { 
+            type: Type.BOOLEAN, 
+            description: "Set to true if the user clearly wants to finalize their order, checkout, or pay." 
+          },
+          isOrder: { 
+            type: Type.BOOLEAN, 
+            description: "Set to true if any specific food items were identified to be added." 
+          }
+        },
+        required: ["isCheckoutIntent", "isOrder"]
       }
     }
   });
