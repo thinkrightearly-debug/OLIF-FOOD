@@ -1,0 +1,8 @@
+{
+  "name": "OLIF Food",
+  "description": "A premium African and international food delivery platform with AI recommendations, real-time tracking, and voice ordering.",
+  "requestFramePermissions": [
+    "microphone",
+    "geolocation"
+  ]
+}
