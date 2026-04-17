@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { motion } from 'motion/react';
 import { Restaurant } from '../types';
 
 interface RestaurantCardProps {
@@ -9,9 +10,13 @@ interface RestaurantCardProps {
 
 const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant, onClick }) => {
   return (
-    <div 
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      whileHover={{ y: -10 }}
       onClick={() => onClick(restaurant.id)}
-      className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer border border-gray-100"
+      className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer border border-gray-100 h-full flex flex-col"
     >
       <div className="relative h-56 overflow-hidden">
         <img 
@@ -44,7 +49,7 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant, onClick }) 
           </span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

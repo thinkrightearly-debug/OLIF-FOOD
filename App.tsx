@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import Navbar from './components/Navbar';
 import RestaurantCard from './components/RestaurantCard';
 import CartSidebar from './components/CartSidebar';
@@ -21,6 +22,7 @@ const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [recommendations, setRecommendations] = useState<any[]>([]);
   const [loadingRecs, setLoadingRecs] = useState(false);
+  const [orderedItemIds, setOrderedItemIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const fetchRecs = async () => {
@@ -99,6 +101,9 @@ const App: React.FC = () => {
   };
 
   const handleCheckout = () => {
+    const newOrderedIds = new Set(orderedItemIds);
+    cart.forEach(item => newOrderedIds.add(item.id));
+    setOrderedItemIds(newOrderedIds);
     setCart([]);
     setIsCartOpen(false);
     setCurrentView('checkout-success');
@@ -107,7 +112,11 @@ const App: React.FC = () => {
   const renderCustomerContent = () => {
     if (currentView === 'checkout-success') {
       return (
-        <div className="max-w-2xl mx-auto px-6 py-24 text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-2xl mx-auto px-6 py-24 text-center"
+        >
           <div className="w-24 h-24 bg-emerald-100 text-[#064E3B] rounded-full flex items-center justify-center mx-auto mb-8 text-4xl">
             <i className="fa-solid fa-check"></i>
           </div>
@@ -117,12 +126,19 @@ const App: React.FC = () => {
             <button onClick={() => setCurrentView('home')} className="bg-[#064E3B] text-white px-8 py-4 rounded-2xl font-bold">Back to Home</button>
             <button className="border border-gray-200 px-8 py-4 rounded-2xl font-bold hover:bg-gray-50">Track Order</button>
           </div>
-        </div>
+        </motion.div>
       );
     }
 
     if (currentView === 'restaurant-detail' && selectedRestaurant) {
-      return <RestaurantDetail restaurant={selectedRestaurant} onAddToCart={addToCart} onBack={() => setCurrentView('home')} />;
+      return (
+        <RestaurantDetail 
+          restaurant={selectedRestaurant} 
+          onAddToCart={addToCart} 
+          onBack={() => setCurrentView('home')} 
+          orderedItemIds={orderedItemIds}
+        />
+      );
     }
 
     if (currentView === 'catering') {
@@ -186,14 +202,20 @@ const App: React.FC = () => {
             <h2 className="text-sm font-bold text-[#D4AF37] uppercase tracking-[0.2em] mb-4">Curated for You</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {recommendations.map((rec, i) => (
-                <div key={i} className="bg-[#064E3B] text-white p-6 rounded-3xl relative overflow-hidden group cursor-pointer hover:scale-105 transition-transform">
+                <motion.div 
+                  key={i} 
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="bg-[#064E3B] text-white p-6 rounded-3xl relative overflow-hidden group cursor-pointer hover:scale-105 transition-transform"
+                >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform"></div>
                   <h3 className="text-xl font-bold mb-2 font-serif">{rec.dish}</h3>
                   <p className="text-sm opacity-80 mb-4">{rec.description}</p>
                   <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#D4AF37]">
                     <i className="fa-solid fa-sparkles"></i> AI Choice
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </section>
@@ -412,16 +434,30 @@ const App: React.FC = () => {
       )}
 
       <main className="bg-gray-50 flex-1">
-        {renderDashboard()}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentView + currentRole}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {renderDashboard()}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
-      <CartSidebar 
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        items={cart}
-        onUpdateQuantity={updateQuantity}
-        onCheckout={handleCheckout}
-      />
+      <AnimatePresence>
+        {isCartOpen && (
+          <CartSidebar 
+            isOpen={isCartOpen}
+            onClose={() => setIsCartOpen(false)}
+            items={cart}
+            onUpdateQuantity={updateQuantity}
+            onCheckout={handleCheckout}
+          />
+        )}
+      </AnimatePresence>
 
       <AIAssistant onOrderCommand={handleVoiceOrder} onCheckout={handleCheckout} cart={cart} />
 

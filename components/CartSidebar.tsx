@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { motion } from 'motion/react';
 import { CartItem } from '../types';
 
 interface CartSidebarProps {
@@ -16,12 +17,22 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, items, onUpd
   const tax = subtotal * 0.05; // 5% VAT in Nigeria
   const total = subtotal + delivery + tax;
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-[100] flex justify-end">
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col transform transition-transform duration-300">
+    <div className="fixed inset-0 z-[110] flex justify-end pointer-events-none">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm pointer-events-auto" 
+        onClick={onClose} 
+      />
+      <motion.div 
+        initial={{ x: '100%' }}
+        animate={{ x: 0 }}
+        exit={{ x: '100%' }}
+        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+        className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col pointer-events-auto"
+      >
         <div className="p-6 border-b border-gray-100 flex justify-between items-center">
           <h2 className="text-2xl font-bold text-slate-800">Your Basket</h2>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
@@ -97,7 +108,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, items, onUpd
             </button>
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

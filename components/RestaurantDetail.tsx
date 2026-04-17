@@ -1,16 +1,23 @@
 
 import React from 'react';
+import { motion } from 'motion/react';
 import { Restaurant, MenuItem } from '../types';
 
 interface RestaurantDetailProps {
   restaurant: Restaurant;
   onAddToCart: (item: MenuItem, restaurantId: string) => void;
   onBack: () => void;
+  orderedItemIds: Set<string>;
 }
 
-const RestaurantDetail: React.FC<RestaurantDetailProps> = ({ restaurant, onAddToCart, onBack }) => {
+const RestaurantDetail: React.FC<RestaurantDetailProps> = ({ restaurant, onAddToCart, onBack, orderedItemIds }) => {
   return (
-    <div className="bg-white">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="bg-white"
+    >
       {/* Hero Section */}
       <div className="relative h-[400px]">
         <img src={restaurant.image} className="w-full h-full object-cover" alt={restaurant.name} />
@@ -52,8 +59,14 @@ const RestaurantDetail: React.FC<RestaurantDetailProps> = ({ restaurant, onAddTo
           <section>
             <h2 className="text-2xl font-bold text-slate-900 mb-8 border-b border-gray-100 pb-4">Full Menu</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {restaurant.menu.map((item) => (
-                <div key={item.id} className="group bg-gray-50/50 rounded-3xl p-4 border border-transparent hover:border-[#064E3B]/10 hover:bg-white hover:shadow-xl transition-all duration-300">
+              {restaurant.menu.map((item, idx) => (
+                <motion.div 
+                  key={item.id} 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.05 }}
+                  className="group bg-gray-50/50 rounded-3xl p-4 border border-transparent hover:border-[#064E3B]/10 hover:bg-white hover:shadow-xl transition-all duration-300"
+                >
                   <div className="flex gap-4">
                     <div className="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0">
                       <img src={item.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={item.name} />
@@ -63,16 +76,28 @@ const RestaurantDetail: React.FC<RestaurantDetailProps> = ({ restaurant, onAddTo
                       <p className="text-xs text-slate-500 line-clamp-2 mb-2">{item.description}</p>
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-[#064E3B]">₦{item.price.toLocaleString()}</span>
-                        <button 
-                          onClick={() => onAddToCart(item, restaurant.id)}
-                          className="bg-[#064E3B] text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#065F46] transition-all shadow-lg shadow-emerald-900/10"
-                        >
-                          <i className="fa-solid fa-plus text-xs"></i>
-                        </button>
+                        <div className="flex items-center">
+                          {orderedItemIds.has(item.id) && (
+                            <button 
+                              onClick={() => onAddToCart(item, restaurant.id)}
+                              className="flex items-center gap-2 bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/30 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider hover:bg-[#D4AF37] hover:text-white transition-all mr-2"
+                              title="You've ordered this before!"
+                            >
+                              <i className="fa-solid fa-rotate-right"></i>
+                              Order Again
+                            </button>
+                          )}
+                          <button 
+                            onClick={() => onAddToCart(item, restaurant.id)}
+                            className="bg-[#064E3B] text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#065F46] transition-all shadow-lg shadow-emerald-900/10"
+                          >
+                            <i className="fa-solid fa-plus text-xs"></i>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </section>
@@ -107,7 +132,7 @@ const RestaurantDetail: React.FC<RestaurantDetailProps> = ({ restaurant, onAddTo
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,0 +1,68 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+  
+  --color-emerald-primary: #064E3B;
+  --color-gold-primary: #D4AF37;
+  --color-gold-light: #F1D279;
+}
+
+@layer base {
+  body {
+    @apply font-sans bg-gray-50 text-slate-900;
+  }
+}
+
+@layer components {
+  .gold-gradient {
+    background: linear-gradient(135deg, #D4AF37 0%, #F1D279 100%);
+  }
+
+  .emerald-gradient {
+    background: linear-gradient(135deg, #064E3B 0%, #065F46 100%);
+  }
+
+  .mesh-gradient {
+    background-color: #064E3B;
+    background-image: 
+        radial-gradient(at 0% 0%, hsla(161,86%,16%,1) 0, transparent 50%), 
+        radial-gradient(at 50% 0%, hsla(45,86%,52%,0.2) 0, transparent 50%), 
+        radial-gradient(at 100% 0%, hsla(161,86%,16%,1) 0, transparent 50%);
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .pulse-gold {
+    animation: pulse-gold 2s infinite;
+  }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulse-gold {
+  0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+  70% { box-shadow: 0 0 0 20px rgba(212, 175, 55, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #064E3B;
+  border-radius: 10px;
+}
